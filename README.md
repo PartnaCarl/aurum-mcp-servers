@@ -1,4 +1,5 @@
 # AURUM FBA MCP Servers
+[![MCPize](https://mcpize.com/badge/@PartnaCarl/aurum-fba)](https://mcpize.com/mcp/aurum-fba)
 
 3 MCP servers for Amazon FBA sellers — built from a live wholesale FBA operation using 2026-accurate fee tables.
 
@@ -24,6 +25,16 @@ T1/T2/T3 decision engine — BUY / PAPER TRADE / SKIP with full margin breakdown
 **Tier thresholds:** T1 (BUY) >= 0.8 · T2 (PAPER TRADE) >= 0.4 · T3 (SKIP) < 0.4
 
 The scorer includes: 2026 FBA fees, referral fees, AMSCO prep costs, inbound placement fees, return rate by category, LIVE fee risk, slow-mover surcharge, and seller competition weighting.
+
+## Connect via MCPize
+
+Use this MCP server instantly with no local installation:
+
+```bash
+npx -y mcpize connect @PartnaCarl/aurum-fba --client claude
+```
+
+Or connect at: **https://mcpize.com/mcp/aurum-fba**
 
 ## Usage
 

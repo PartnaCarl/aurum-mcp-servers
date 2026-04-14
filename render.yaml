@@ -3,7 +3,7 @@ services:
     name: aurum-fba-fee-calculator
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: fastmcp run fba_fee_calculator_server.py
+    startCommand: fastmcp run fba_fee_calculator_server.py --transport sse --host 0.0.0.0 --port $PORT
     plan: free
     envVars: []
 
@@ -11,7 +11,7 @@ services:
     name: aurum-brand-compliance
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: fastmcp run brand_compliance_server.py
+    startCommand: fastmcp run brand_compliance_server.py --transport sse --host 0.0.0.0 --port $PORT
     plan: free
     envVars: []
 
@@ -19,6 +19,6 @@ services:
     name: aurum-sku-scorer
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: fastmcp run sku_scorer_server.py
+    startCommand: fastmcp run sku_scorer_server.py --transport sse --host 0.0.0.0 --port $PORT
     plan: free
     envVars: []

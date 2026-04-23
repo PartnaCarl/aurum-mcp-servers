@@ -127,6 +127,29 @@ def _score_one(
     estimated_monthly_sales: int,
     product_cubic_ft: float,
 ) -> dict:
+    # Input validation — reject invalid products up front
+    if sell_price <= 0:
+        return {
+            "tier": "T3", "signal": "SKIP", "pvs_score": 0.0,
+            "recommendation": "Rejected: sell_price must be greater than 0.",
+            "error": f"invalid sell_price: {sell_price}",
+            "flags": ["INVALID_INPUT"],
+        }
+    if buy_price < 0:
+        return {
+            "tier": "T3", "signal": "SKIP", "pvs_score": 0.0,
+            "recommendation": "Rejected: buy_price cannot be negative.",
+            "error": f"invalid buy_price: {buy_price}",
+            "flags": ["INVALID_INPUT"],
+        }
+    if weight_oz <= 0:
+        return {
+            "tier": "T3", "signal": "SKIP", "pvs_score": 0.0,
+            "recommendation": "Rejected: weight_oz must be greater than 0.",
+            "error": f"invalid weight_oz: {weight_oz}",
+            "flags": ["INVALID_INPUT"],
+        }
+
     # FBA fee
     fba_fee = _get_fba_fee(weight_oz, size_tier)
 
@@ -140,19 +163,17 @@ def _score_one(
     # Inbound placement fee
     placement_fee = INBOUND_PLACEMENT_FEES.get(size_tier, INBOUND_PLACEMENT_FEES["standard_size"])
 
-    # LIVE fee (low inventory risk)
-    if estimated_monthly_sales > 0 and order_quantity > 0:
-        days_covered = order_quantity / (estimated_monthly_sales / 30)
-    else:
-        days_covered = 999
-    live_fee_risk = days_covered < LIVE_FEE_DAYS_THRESHOLD
-    live_fee = LIVE_FEE_BY_SIZE.get(size_tier, 0.32) if live_fee_risk else 0.0
-
-    # Slow-mover surcharge
+    # Projected days of coverage at estimated velocity (used for both LIVE fee and slow-mover)
     if estimated_monthly_sales > 0 and order_quantity > 0:
         days_to_sell = order_quantity / (estimated_monthly_sales / 30)
     else:
         days_to_sell = float(days_to_sell_through)
+
+    # LIVE fee (low inventory risk) fires when inventory turns fast enough to trigger Amazon's 28-day threshold
+    live_fee_risk = days_to_sell < LIVE_FEE_DAYS_THRESHOLD
+    live_fee = LIVE_FEE_BY_SIZE.get(size_tier, 0.32) if live_fee_risk else 0.0
+
+    # Slow-mover surcharge fires when inventory sits past 182 days
     slow_mover_risk = days_to_sell > SLOW_MOVER_DAYS_THRESHOLD
     if slow_mover_risk:
         months_over = (days_to_sell - 182) / 30
@@ -161,19 +182,19 @@ def _score_one(
     else:
         storage_surcharge = 0.0
 
-    # Net margin
+    # Net margin (pre-return)
     total_costs = buy_price + fba_fee + prep_cost + placement_fee + referral_fee + live_fee + storage_surcharge
     net_margin = sell_price - total_costs
     net_margin_pct = net_margin / sell_price if sell_price > 0 else 0.0
 
-    # Return rate adjustment
+    # Return rate adjustment (post-return view)
     return_rate = CATEGORY_RETURN_RATES.get(category, DEFAULT_RETURN_RATE)
     return_cost = buy_price * return_rate * 0.5
     margin_after_returns = net_margin - return_cost
-    net_margin_pct = margin_after_returns / sell_price if sell_price > 0 else 0.0
+    net_margin_pct_after_returns = margin_after_returns / sell_price if sell_price > 0 else 0.0
 
-    # Buffered margin
-    buffered_margin_pct = net_margin_pct * (1 - MARGIN_BUFFER_PCT)
+    # Buffered margin uses the post-return figure — scoring must account for return losses
+    buffered_margin_pct = net_margin_pct_after_returns * (1 - MARGIN_BUFFER_PCT)
 
     # Seller weight and scoring
     sw = _seller_weight(seller_count)
@@ -181,21 +202,21 @@ def _score_one(
     sell_through_factor = 1.0 / max(days_to_sell_through, 1)
     pvs_score = units_per_seller * buffered_margin_pct * sell_through_factor * sw
 
-    # Flags
+    # Flags — margin flag uses post-return figure since that's what the seller actually keeps
     flags = []
-    if net_margin_pct < 0.10:   flags.append("LOW_MARGIN")
-    if seller_count > 10:        flags.append("HIGH_COMPETITION")
-    if days_to_sell_through > 90: flags.append("SLOW_VELOCITY")
-    if slow_mover_risk:          flags.append("SLOW_MOVER_SURCHARGE")
-    if live_fee_risk:            flags.append("LIVE_FEE_RISK")
+    if net_margin_pct_after_returns < 0.10:  flags.append("LOW_MARGIN")
+    if seller_count > 10:                     flags.append("HIGH_COMPETITION")
+    if days_to_sell_through > 90:             flags.append("SLOW_VELOCITY")
+    if slow_mover_risk:                       flags.append("SLOW_MOVER_SURCHARGE")
+    if live_fee_risk:                         flags.append("LIVE_FEE_RISK")
 
     # Tier assignment
     if "LOW_MARGIN" in flags:
         tier, signal = "T3", "SKIP"
-        recommendation = f"Net margin {net_margin_pct:.1%} is below 10% minimum. Do not source."
+        recommendation = f"Net margin {net_margin_pct_after_returns:.1%} (after returns) is below 10% minimum. Do not source."
     elif pvs_score >= 0.8:
         tier, signal = "T1", "BUY"
-        recommendation = f"Strong margin ({net_margin_pct:.1%}) and velocity. Source this product."
+        recommendation = f"Strong margin ({net_margin_pct_after_returns:.1%} after returns) and velocity. Source this product."
         if flags: recommendation += f" Flags: {', '.join(flags)}."
     elif pvs_score >= 0.4:
         tier, signal = "T2", "PAPER TRADE"
@@ -216,8 +237,9 @@ def _score_one(
             "sell_price": round(sell_price, 2),
             "net_margin_dollars": round(net_margin, 2),
             "net_margin_pct": f"{net_margin_pct:.1%}",
+            "net_margin_pct_after_returns": f"{net_margin_pct_after_returns:.1%}",
             "buffered_margin_pct": f"{buffered_margin_pct:.1%}",
-            "margin_after_returns": round(margin_after_returns, 2),
+            "margin_after_returns_dollars": round(margin_after_returns, 2),
         },
         "fee_breakdown": {
             "fba_fulfillment": round(fba_fee, 2),

@@ -94,6 +94,15 @@ def get_fba_fee(weight_oz: float = 16.0, size_tier: str = "standard_size") -> di
     Returns:
         dict with fba_fee (dollars), size_tier, weight_oz, and effective_date.
     """
+    if weight_oz <= 0:
+        return {
+            "error": f"invalid weight_oz: {weight_oz}",
+            "fba_fee": 0.0,
+            "size_tier": size_tier,
+            "weight_oz": weight_oz,
+            "effective_date": "2026-01-15",
+        }
+
     if size_tier == "large_bulky":
         weight_lb = weight_oz / 16
         extra_lb = max(0, weight_lb - 2)
@@ -130,6 +139,14 @@ def calculate_referral_fee(category: str, sale_price: float) -> dict:
     Returns:
         dict with referral_fee (dollars), rate (percent), and category used.
     """
+    if sale_price <= 0:
+        return {
+            "error": f"invalid sale_price: {sale_price}",
+            "referral_fee": 0.0,
+            "rate": "0%",
+            "category": category,
+            "sale_price": sale_price,
+        }
     rate = REFERRAL_RATES.get(category, DEFAULT_REFERRAL_RATE)
     fee = round(sale_price * rate, 2)
     return {

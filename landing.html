@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AURUM — Stop getting suspended. Stop under-pricing. 2026 fee-accurate FBA intelligence tools for Amazon sellers.">
+<title>AURUM — FBA Intelligence Tools. Stop Getting Suspended. Stop Under-Pricing.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #1D3557;
+    --navy-light:  #2A4A73;
+    --orange:      #E07B39;
+    --orange-light:#F0A06A;
+    --orange-dim:  rgba(224,123,57,0.1);
+    --bg:          #FAFAF7;
+    --bg-warm:     #F3EFE8;
+    --bg-card:     #FFFFFF;
+    --border:      #E4DFD6;
+    --text:        #1C1C22;
+    --text-muted:  #6B6672;
+    --radius:      14px;
+    --shadow:      0 2px 16px rgba(29,53,87,0.08);
+    --shadow-hover:0 12px 40px rgba(29,53,87,0.16);
+    --shadow-lg:   0 18px 56px rgba(29,53,87,0.16);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 999;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    opacity: 0.028; mix-blend-mode: overlay;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6vw;
+    height: 68px;
+    background: rgba(250,250,247,0.93);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.25rem; font-weight: 800; color: var(--navy);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-logo .dot { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; margin-top: 2px; }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none; font-size: 0.88rem; font-weight: 600;
+    transition: color 0.22s;
+  }
+  .nav-links a:hover { color: var(--navy); }
+  .nav-cta {
+    background: var(--orange); color: #fff; padding: 10px 22px; border-radius: 8px;
+    font-weight: 700; font-size: 0.85rem; text-decoration: none; font-family: 'Sora', sans-serif;
+    transition: background 0.22s, transform 0.22s, box-shadow 0.22s;
+    box-shadow: 0 2px 10px rgba(224,123,57,0.22);
+  }
+  .nav-cta:hover { background: #cc6e2e; transform: translateY(-1px); }
+
+  /* Hero */
+  .hero {
+    min-height: 88vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 130px 6vw 90px; position: relative; overflow: hidden;
+    text-align: center;
+  }
+  .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .shape { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.38; }
+  .shape-1 { width: 560px; height: 560px; background: radial-gradient(circle, #BDD5EA 0%, transparent 70%); top: -140px; right: -120px; }
+  .shape-2 { width: 420px; height: 420px; background: radial-gradient(circle, #F5CBA7 0%, transparent 70%); bottom: -60px; left: -100px; }
+
+  .hero-watermark {
+    position: absolute; z-index: 0; pointer-events: none; user-select: none;
+    font-family: 'Sora', sans-serif; font-weight: 800;
+    font-size: clamp(8rem, 18vw, 16rem);
+    color: var(--navy); opacity: 0.035;
+    letter-spacing: -0.04em; line-height: 1;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    white-space: nowrap;
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--orange-dim); border: 1.5px solid rgba(224,123,57,0.28);
+    color: var(--orange); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 8px 18px; border-radius: 100px;
+    margin-bottom: 28px; font-family: 'Sora', sans-serif;
+  }
+
+  .hero h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 800; line-height: 1.06; color: var(--navy); margin-bottom: 22px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 em { font-style: normal; color: var(--orange); }
+
+  .hero-sub {
+    font-size: 1.15rem; color: var(--text-muted); max-width: 640px;
+    margin: 0 auto 36px; line-height: 1.7;
+  }
+
+  .hero-trust {
+    display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+    margin-bottom: 36px;
+  }
+  .trust-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; color: var(--navy); font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    background: rgba(255,255,255,0.72);
+    border: 1px solid rgba(29,53,87,0.14);
+    border-radius: 100px; padding: 7px 16px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .hero-cta {
+    display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  }
+  .btn-primary {
+    background: var(--orange); color: #fff; padding: 15px 32px; border-radius: var(--radius);
+    font-weight: 700; font-size: 0.95rem; font-family: 'Sora', sans-serif; text-decoration: none;
+    transition: background 0.22s, transform 0.22s, box-shadow 0.22s;
+    box-shadow: 0 4px 18px rgba(224,123,57,0.3);
+  }
+  .btn-primary:hover { background: #cc6e2e; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(224,123,57,0.38); }
+  .btn-secondary {
+    background: transparent; color: var(--navy); border: 2px solid var(--navy);
+    padding: 13px 30px; border-radius: var(--radius); font-weight: 700;
+    font-size: 0.95rem; font-family: 'Sora', sans-serif; text-decoration: none;
+    transition: background 0.22s, color 0.22s;
+  }
+  .btn-secondary:hover { background: var(--navy); color: #fff; }
+
+  /* Section shared */
+  .section-label {
+    font-family: 'Sora', sans-serif; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(2rem, 3.8vw, 3rem);
+    font-weight: 800; color: var(--navy); line-height: 1.12; margin-bottom: 14px;
+  }
+  .section-sub { color: var(--text-muted); font-size: 1rem; max-width: 620px; }
+
+  /* Pain */
+  .pain {
+    padding: 110px 6vw;
+    background: var(--bg-warm);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .pain-header { text-align: center; margin-bottom: 52px; }
+  .pain-header .section-sub { margin: 0 auto; }
+  .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; max-width: 1100px; margin: 0 auto; }
+  .pain-card {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 30px;
+    transition: border-color 0.28s, box-shadow 0.28s, transform 0.28s;
+  }
+  .pain-card:hover { border-color: var(--orange); box-shadow: var(--shadow-hover); transform: translateY(-5px); }
+  .pain-amount {
+    font-family: 'Sora', sans-serif; font-size: 2.2rem; font-weight: 800;
+    color: var(--orange); margin-bottom: 6px; letter-spacing: -0.02em;
+  }
+  .pain-card h3 {
+    font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 10px; line-height: 1.4;
+  }
+  .pain-card p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* Pricing */
+  .pricing { padding: 120px 6vw; background: var(--bg); }
+  .pricing-header { text-align: center; margin-bottom: 64px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .pricing-header .section-sub { margin: 0 auto; }
+
+  .price-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+  .price-card {
+    background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius);
+    padding: 40px 32px; display: flex; flex-direction: column;
+    box-shadow: var(--shadow);
+    transition: border-color 0.28s, box-shadow 0.32s, transform 0.28s;
+    position: relative; overflow: hidden;
+  }
+  .price-card:hover {
+    border-color: var(--navy);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-6px);
+  }
+  .price-card.featured {
+    border-color: var(--orange);
+    background: linear-gradient(160deg, #fff 0%, #FEF5EC 100%);
+    box-shadow: 0 0 40px rgba(224,123,57,0.12), var(--shadow);
+  }
+  .price-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute; top: 16px; right: 16px;
+    background: var(--orange); color: #fff; font-size: 0.62rem; font-weight: 700;
+    font-family: 'Sora', sans-serif; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 100px;
+  }
+  .price-product-num {
+    font-family: 'Sora', sans-serif; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 14px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .price-card h3 {
+    font-family: 'Sora', sans-serif; font-size: 1.45rem; font-weight: 800;
+    color: var(--navy); margin-bottom: 8px; line-height: 1.25;
+  }
+  .price-tagline {
+    font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;
+  }
+  .price-amount {
+    font-family: 'Sora', sans-serif;
+    font-size: 3.2rem; font-weight: 800;
+    color: var(--navy); line-height: 1;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .price-card .price-amount-suffix {
+    font-family: 'Sora', sans-serif;
+    font-size: 1rem; font-weight: 600; color: var(--text-muted);
+    margin-left: 6px;
+  }
+  .price-amount-row { display: flex; align-items: baseline; margin-bottom: 28px; }
+
+  .price-features { list-style: none; flex: 1; margin-bottom: 28px; }
+  .price-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.9rem; color: var(--text); padding: 8px 0;
+    border-bottom: 1px dashed rgba(29,53,87,0.08);
+  }
+  .price-features li:last-child { border-bottom: none; }
+  .price-features .check {
+    min-width: 20px; height: 20px; background: var(--orange-dim); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--orange); font-size: 0.7rem; font-weight: 800; margin-top: 2px;
+  }
+
+  .price-cta {
+    background: var(--navy); color: #fff; padding: 14px 24px; border-radius: 10px;
+    font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; text-align: center; display: block;
+    transition: background 0.22s, transform 0.22s;
+  }
+  .price-cta:hover { background: var(--navy-light); transform: translateY(-1px); }
+  .price-card.featured .price-cta { background: var(--orange); }
+  .price-card.featured .price-cta:hover { background: #cc6e2e; }
+
+  .pricing-note {
+    text-align: center; margin-top: 32px;
+    color: var(--text-muted); font-size: 0.88rem;
+  }
+
+  /* What you get — detail strip */
+  .detail { padding: 110px 6vw; background: var(--bg-warm); border-top: 1px solid var(--border); }
+  .detail-inner { max-width: 1100px; margin: 0 auto; }
+  .detail-header { text-align: center; margin-bottom: 48px; }
+  .detail-header .section-sub { margin: 0 auto; }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+  .detail-card {
+    background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius);
+    padding: 32px 28px;
+  }
+  .detail-card h4 {
+    font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800;
+    color: var(--navy); margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+  .detail-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* Soft CTA */
+  .soft-cta { padding: 120px 6vw; background: var(--bg); text-align: center; }
+  .soft-cta h2 {
+    font-family: 'Sora', sans-serif; font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-weight: 800; color: var(--navy); max-width: 720px;
+    margin: 0 auto 16px; line-height: 1.2;
+  }
+  .soft-cta p { color: var(--text-muted); font-size: 1rem; max-width: 560px; margin: 0 auto 32px; }
+
+  /* Footer */
+  footer {
+    padding: 40px 6vw;
+    display: flex; flex-wrap: wrap; gap: 16px;
+    justify-content: space-between; align-items: center;
+    background: var(--bg);
+    position: relative;
+    border-top: 1px solid var(--border);
+  }
+  footer::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--orange) 0%, var(--navy) 60%, transparent 100%);
+    opacity: 0.6;
+  }
+  .footer-brand {
+    font-family: 'Sora', sans-serif; font-weight: 800; color: var(--navy);
+    font-size: 1.1rem; display: flex; align-items: center; gap: 6px;
+  }
+  .footer-brand .dot { width: 6px; height: 6px; background: var(--orange); border-radius: 50%; }
+  .footer-meta { font-size: 0.82rem; color: var(--text-muted); }
+  .footer-contact a { color: var(--orange); text-decoration: none; font-size: 0.875rem; font-weight: 600; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 110px 6vw 60px; }
+    .hero h1 { font-size: 2rem; }
+    .price-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#"><div class="dot"></div>AURUM</a>
+  <ul class="nav-links">
+    <li><a href="#pricing">Tools</a></li>
+    <li><a href="#detail">What You Get</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#pricing" class="nav-cta">See Pricing →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+  </div>
+  <div class="hero-watermark" aria-hidden="true">AURUM</div>
+  <div class="hero-content">
+    <div class="hero-badge">🛡️ For Amazon FBA Sellers · 2026 Fee-Accurate</div>
+    <h1>Stop getting suspended.<br>Stop <em>under-pricing.</em></h1>
+    <p class="hero-sub">AURUM is a trio of MCP tools that tell you — before you wire the money — whether a product will actually make you money and whether the brand will get you kicked off Amazon. Built for wholesale FBA sellers in 2026.</p>
+    <div class="hero-trust">
+      <div class="trust-chip">✅ 2026 FBA fees baked in</div>
+      <div class="trust-chip">🔍 715+ brands tracked</div>
+      <div class="trust-chip">⚡ Works in Claude, Cursor, any MCP client</div>
+    </div>
+    <div class="hero-cta">
+      <a href="#pricing" class="btn-primary">See the Tools →</a>
+      <a href="#detail" class="btn-secondary">How It Works</a>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="pain-header">
+    <div class="section-label">The problem</div>
+    <h2 class="section-title">Two mistakes are ending FBA businesses right now.</h2>
+    <p class="section-sub">Both are preventable. Both take under a minute to check. Most sellers still don't.</p>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-amount">$8,400</div>
+      <h3>The average loss from a single under-priced SKU in 2026</h3>
+      <p>Amazon added a 3.5% fee surcharge in April 2026. Half the FBA calculators online haven't updated. Sellers buy inventory expecting 22% margins and realize at launch the real number is 8%.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-amount">30 days</div>
+      <h3>Time to reinstate after an IP complaint suspension</h3>
+      <p>One cease-and-desist from Apple, Dyson, or Ray-Ban and your seller account is down for a month minimum. Some never come back. Wholesale lists are riddled with gated and IP-risky brands no one flags.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-amount">95%</div>
+      <h3>Of wholesale "deals" that fail the AURUM scoring engine</h3>
+      <p>Most products distributors push have already been priced down by the competition. T1/T2/T3 scoring catches this in seconds — before you commit $5K of working capital to inventory that won't sell.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-header">
+    <div class="section-label">The tools</div>
+    <h2 class="section-title">Three MCP servers. Pay for what you need.</h2>
+    <p class="section-sub">Each tool runs as a self-contained MCP server. Connect it to Claude, Cursor, or any MCP client and ask questions in plain English. No code. No spreadsheets.</p>
+  </div>
+
+  <div class="price-grid">
+
+    <!-- Tier 1: $9 -->
+    <div class="price-card">
+      <div class="price-product-num">Tool 01 · Starter</div>
+      <h3>FBA Fee Calculator</h3>
+      <p class="price-tagline">The foundation. Get the exact 2026 fee for any product, referral rate by category, AMSCO prep cost, and inbound placement — in one call.</p>
+      <div class="price-amount-row">
+        <span class="price-amount">$9</span>
+        <span class="price-amount-suffix">/mo</span>
+      </div>
+      <ul class="price-features">
+        <li><span class="check">✓</span>2026 FBA fees (Apr 3.5% surcharge included)</li>
+        <li><span class="check">✓</span>Referral rates across 20+ categories</li>
+        <li><span class="check">✓</span>AMSCO prep cost estimator</li>
+        <li><span class="check">✓</span>Inbound placement fee by size tier</li>
+        <li><span class="check">✓</span>Works in Claude Desktop, Cursor, any MCP client</li>
+      </ul>
+      <!-- STRIPE: Drop your Stripe Payment Link for the $9 Fee Calculator plan in the href below. -->
+      <a href="#REPLACE_WITH_STRIPE_LINK_FEE_CALCULATOR" class="price-cta">Start for $9/mo</a>
+    </div>
+
+    <!-- Tier 2: $15 -->
+    <div class="price-card">
+      <div class="price-product-num">Tool 02 · Shield</div>
+      <h3>Brand Compliance</h3>
+      <p class="price-tagline">Check any brand against 715+ tracked Amazon gating, IP complaint, and counterfeit-commingling lists. One call protects your account.</p>
+      <div class="price-amount-row">
+        <span class="price-amount">$15</span>
+        <span class="price-amount-suffix">/mo</span>
+      </div>
+      <ul class="price-features">
+        <li><span class="check">✓</span>715+ brands tracked (gated / IP-risky / commingling)</li>
+        <li><span class="check">✓</span>Single-brand and full wholesale-list batch check</li>
+        <li><span class="check">✓</span>"Do not source" list export from batch input</li>
+        <li><span class="check">✓</span>Case-insensitive — paste whatever you have</li>
+        <li><span class="check">✓</span>Updated monthly from seller-forum enforcement data</li>
+      </ul>
+      <!-- STRIPE: Drop your Stripe Payment Link for the $15 Brand Compliance plan in the href below. -->
+      <a href="#REPLACE_WITH_STRIPE_LINK_BRAND_COMPLIANCE" class="price-cta">Start for $15/mo</a>
+    </div>
+
+    <!-- Tier 3: $19 featured -->
+    <div class="price-card featured">
+      <div class="price-product-num">Tool 03 · Full Stack</div>
+      <h3>SKU Scorer</h3>
+      <p class="price-tagline">The T1/T2/T3 decision engine. Full margin stack, LIVE fee risk, slow-mover surcharge, seller-weighted velocity score. BUY / PAPER TRADE / SKIP.</p>
+      <div class="price-amount-row">
+        <span class="price-amount">$19</span>
+        <span class="price-amount-suffix">/mo</span>
+      </div>
+      <ul class="price-features">
+        <li><span class="check">✓</span>T1/T2/T3 tier decisions with PVS scoring</li>
+        <li><span class="check">✓</span>Full margin breakdown (pre and post return rate)</li>
+        <li><span class="check">✓</span>LIVE fee + slow-mover surcharge modeling</li>
+        <li><span class="check">✓</span>Seller-count-weighted velocity score</li>
+        <li><span class="check">✓</span>Batch scoring — upload a 1,000-row wholesale list</li>
+        <li><span class="check">✓</span>Includes everything in Fee Calculator and Compliance</li>
+      </ul>
+      <!-- STRIPE: Drop your Stripe Payment Link for the $19 SKU Scorer plan in the href below. -->
+      <a href="#REPLACE_WITH_STRIPE_LINK_SKU_SCORER" class="price-cta">Start for $19/mo</a>
+    </div>
+  </div>
+
+  <p class="pricing-note">Monthly billing. Cancel anytime. 7-day refund if it doesn't pay for itself.</p>
+</section>
+
+<!-- DETAIL -->
+<section class="detail" id="detail">
+  <div class="detail-inner">
+    <div class="detail-header">
+      <div class="section-label">Under the hood</div>
+      <h2 class="section-title">What makes AURUM different.</h2>
+      <p class="section-sub">Built by an FBA seller, not a SaaS company. Every number is sourced, every threshold has a reason.</p>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-card">
+        <h4>2026 fee tables, updated</h4>
+        <p>The April 2026 3.5% FBA surcharge is baked into every fee tier. Amazon's in-house calculator shows pre-surcharge numbers for another six weeks. You'll know the real cost today.</p>
+      </div>
+      <div class="detail-card">
+        <h4>LIVE fee modeling</h4>
+        <p>Amazon's Low Inventory Value fee fires at 28 days of coverage or less. Most tools don't account for it. AURUM does — and surfaces it as a flag before you order.</p>
+      </div>
+      <div class="detail-card">
+        <h4>Slow-mover surcharge</h4>
+        <p>Inventory sitting past 182 days triggers Amazon's long-term storage surcharge. AURUM projects your days-to-sell at real velocity and warns you before you buy 12 months of product.</p>
+      </div>
+      <div class="detail-card">
+        <h4>715 brands, not 50</h4>
+        <p>The compliance database covers gated, IP-risky, and commingling-risk brands across 14 categories — electronics, apparel, sunglasses (Ray-Ban, Oakley), baby, supplements, grocery, automotive, pro audio.</p>
+      </div>
+      <div class="detail-card">
+        <h4>Return rate adjustment</h4>
+        <p>Apparel has a 25% return rate. Grocery has 3%. AURUM adjusts your net margin by category before scoring, so "20% margin" apparel doesn't trick you into thinking it's a winner.</p>
+      </div>
+      <div class="detail-card">
+        <h4>Runs in your AI tools</h4>
+        <p>MCP (Model Context Protocol) means you ask Claude or Cursor to score a SKU in natural language. No dashboards. No logins. Just the answer, in the same chat window you're already using.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOFT CTA -->
+<section class="soft-cta" id="faq">
+  <h2>One suspended SKU costs more than a year of AURUM.</h2>
+  <p>Stop guessing. Start scoring.</p>
+  <a href="#pricing" class="btn-primary">Pick a Tool →</a>
+</section>
+
+<footer>
+  <div class="footer-brand"><div class="dot"></div>AURUM</div>
+  <div class="footer-meta">© 2026 Partna Company LLC · Built for Amazon FBA sellers</div>
+  <div class="footer-contact"><a href="mailto:carlclendenin@outlook.com">carlclendenin@outlook.com</a></div>
+</footer>
+
+</body>
+</html>

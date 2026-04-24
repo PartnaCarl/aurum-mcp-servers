@@ -1,0 +1,6 @@
+[build]
+  publish = "."
+  ignore = "/bin/false"
+
+[build.environment]
+  PYTHON_VERSION = ""

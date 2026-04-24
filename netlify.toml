@@ -1,6 +1,3 @@
 [build]
-  publish = "."
-  ignore = "/bin/false"
-
-[build.environment]
-  PYTHON_VERSION = ""
+  publish = "netlify_site"
+  command = "mkdir -p netlify_site && cp landing.html netlify_site/index.html"

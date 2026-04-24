@@ -1,3 +1,6 @@
 [build]
   publish = "netlify_site"
   command = "mkdir -p netlify_site && cp landing.html netlify_site/index.html"
+
+[build.environment]
+  PYTHON_VERSION = "3.8"
